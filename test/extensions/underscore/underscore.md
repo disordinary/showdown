@@ -19,7 +19,7 @@ foo\_bar\_baz foo\_bar\_baz\_bar\_foo \_foo\_bar baz\_bar\_ baz\_foo
 ```html
 foo_bar_baz foo_bar_baz_bar_foo _foo_bar baz_bar_ baz_foo
 ```
-  
+
 <pre>foo_bar_baz foo_bar_baz_bar_foo _foo_bar baz_bar_ baz_foo</pre>
 
 <pre><code class="language-html">foo_bar_baz foo_bar_baz_bar_foo _foo_bar baz_bar_ baz_foo</code></pre>
@@ -71,3 +71,6 @@ http://myurl.com/foo_bar_baz_bar_foo
 
 <http://myurl.com/foo_bar_baz_bar_foo>
 
+_italics_.
+
+_italics_   .
