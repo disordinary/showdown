@@ -195,6 +195,12 @@ Showdown.converter = function(converter_options) {
 
     text = _RunBlockGamut(text);
 
+    // Run output modifiers
+    Showdown.forEach(g_output_modifiers, function(x){
+      text = _ExecuteExtension(x, text);
+    });
+
+
     text = _UnescapeSpecialChars(text);
 
     // attacklab: Restore dollar signs
@@ -203,10 +209,6 @@ Showdown.converter = function(converter_options) {
     // attacklab: Restore tildes
     text = text.replace(/~T/g,"~");
 
-    // Run output modifiers
-    Showdown.forEach(g_output_modifiers, function(x){
-      text = _ExecuteExtension(x, text);
-    });
 
     return text;
   };
@@ -612,6 +614,8 @@ Showdown.converter = function(converter_options) {
     text = _EncodeAmpsAndAngles(text);
     text = _DoItalicsAndBold(text);
 
+    //text = _DoHighlights(text);
+
     // Do hard breaks:
     text = text.replace(/  +\n/g," <br />\n");
 
@@ -620,7 +624,7 @@ Showdown.converter = function(converter_options) {
 
   var _EscapeSpecialCharsWithinTagAttributes = function(text) {
     //
-    // Within tags -- meaning between < and > -- encode [\ ` * _] so they
+    // Within tags -- meaning between < and > -- encode [\ ` * _ ~ =] so they
     // don't conflict with their use in Markdown for code, italics and strong.
     //
 
@@ -630,10 +634,9 @@ Showdown.converter = function(converter_options) {
 
     text = text.replace(regex, function(wholeMatch) {
       var tag = wholeMatch.replace(/(.)<\/?code>(?=.)/g,"$1`");
-      tag = escapeCharacters(tag,"\\`*_");
+      tag = escapeCharacters(tag,"\\`*_~=");
       return tag;
     });
-
     return text;
   };
 
@@ -1297,6 +1300,20 @@ Showdown.converter = function(converter_options) {
           return hashBlock("<blockquote>\n" + bq + "\n</blockquote>");
         });
     return text;
+  };
+
+  var _DoHighlights = function(text) {
+        var highlightRegex = /(=){2}([\s\S]+?)(=){2}/gim;
+        text = text.replace(highlightRegex, function (match, n, content) {
+            // Check the content isn't just an `=`
+            if (!/^=+$/.test(content)) {
+                return '<mark>' + content + 'BOOO</mark>';
+            }
+
+            return match;
+        });
+
+        return text;
   };
 
 
